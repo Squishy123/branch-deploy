@@ -5,9 +5,11 @@ require('dotenv').config();
 const shortid = require('shortid');
 
 //start up local db
-const FileSync = require('lowdb/adapters/FileAsync');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
-const db = require('lowdb')(adapter);
+const db = low(adapter);
+db.read();
 
 /**DB Syntax
  * Branch
@@ -43,9 +45,95 @@ server.use(
     })
 );
 
-server.get('/', (req, res) => {
-    res.send('hello world!');
+let router = express.Router();
+
+router.get('/', (req, res) => {
+    res.send('Branch Deploy Working!');
 });
+
+/**
+ * Opens a new branch and starts serving it
+ * branch_name
+ */
+router.post('/open', (req, res) => {
+    try {
+        if (!req.params.branch_name)
+            return res.send({
+                status: 'ERROR Missing required param: branch_name'
+            });
+
+
+        let id = shortid.generate();
+        //clone repo in dir with id
+
+
+        db.get('active_branches')
+            .push({
+                branch_name: req.params.branch_name,
+                branch_id: id
+            });
+    } catch (err) {
+        return res.send({
+            status: `ERROR ${err}`
+        });
+    }
+});
+
+router.get('/status/:branch_name', (req, res) => {
+
+})
+
+/**
+ * Closes a branch and stops serving it
+ * 
+ */
+router.post('/close', (req, res) => {
+
+})
+
+router.get('/active_branches', (req, res) => {
+    try {
+        res.send({
+            status: 'OK',
+            active_branches: db.get('active_branches')
+        });
+    } catch (err) {
+        return res.send({
+            status: `ERROR ${err}`
+        });
+    }
+});
+
+router.get('/closed_branches', (req, res) => {
+    try {
+        res.send({
+            status: 'OK',
+            closed_branches: db.get('closed_branches')
+        });
+    } catch (err) {
+        return res.send({
+            status: `ERROR ${err}`
+        });
+    }
+});
+
+router.get('/branches', (req, res) => {
+    try {
+        res.send({
+            status: 'OK',
+            branches: {
+                active_branches: db.get('active_branches'),
+                closed_branches: db.get('closed_branches')
+            }
+        });
+    } catch (err) {
+        return res.send({
+            status: `ERROR ${err}`
+        });
+    }
+});
+
+server.use('/branch-deploy', router);
 
 server.listen((process.env.PORT) ? process.env.PORT : 3000, process.env.HOST ? process.env.HOST : 'localhost', function () {
     console.log(`${server.name} listening at http://${process.env.HOST ? process.env.HOST : 'localhost'}:${(process.env.PORT) ? process.env.PORT : 3000}`);

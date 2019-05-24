@@ -1,5 +1,7 @@
 {
-    "active_branches": [],
+    "active_branches": [{
+        "branch_name": "Tester123"
+    }],
     "closed_branches": [],
     "hosts": []
 }
