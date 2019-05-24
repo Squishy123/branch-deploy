@@ -8,7 +8,7 @@
 ### Essentially, this project acts as a master controller, managing the different branches of a git repo. When the branch-deploy API is triggered, the controller clones the repo locally, checkouts the specified branch and then starts it up on a unique hostname. 
 
 ## Application ENV variables 
-### When you build your application, it needs to have a few ENV variables working in order to properly assign a unique hostname.
+### When you build your application, it needs to have a few ENV variables working in order to properly assign a unique hostname. Branch-deploy expects a dotenv configuration type setup: .env is stored in the project root and is automatically binded to the application on runtime.
 
 | Variable | Description                                |
 |----------|--------------------------------------------|
@@ -25,6 +25,8 @@
 | GIT_PASS | Your git password                                      |
 | HOST     | Assign a host for branch-deploy to listen on(optional) |
 | PORT     | Assign a port for branch-deploy to listen on(optional) |
+
+### NOTE: Any additional variables defined in your application can be added to the .additional.env in the branch-deploy. These will be automatically binded to the application environment. 
 
 ## Quick-Start
 ### 1. Start off by cloning this [repo](https://github.com/Squishy123/branch-deploy.git). 

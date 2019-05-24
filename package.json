@@ -5,5 +5,12 @@
   "main": "src/main.js",
   "repository": "https://github.com/Squishy123/branch-deploy.git",
   "author": "squishy123 <christian.gnaw@gmail.com>",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "express": "^4.17.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
 }
