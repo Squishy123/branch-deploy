@@ -1,0 +1,9 @@
+{
+  "name": "branch-deploy",
+  "version": "1.0.0",
+  "description": "Manage the deployment of multiple branches through an API ",
+  "main": "src/main.js",
+  "repository": "https://github.com/Squishy123/branch-deploy.git",
+  "author": "squishy123 <christian.gnaw@gmail.com>",
+  "license": "Apache-2.0"
+}
