@@ -1,5 +1,5 @@
 # branch-deploy
-Manage the deployment of multiple branches through an API 
+### Manage the deployment of multiple branches through an API 
 
 ## What is this used for?
 ### When you want to quickly deploy test branches of server-side applications onto temporary hosts. Back-end API's, front-end previews - anything with a host server. 
