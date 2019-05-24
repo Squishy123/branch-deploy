@@ -2,7 +2,7 @@
 ### Manage the deployment of multiple branches through an API 
 
 ## What is this used for?
-### When you want to quickly deploy test branches of server-side applications onto temporary hosts. Back-end API's, front-end previews - anything with a host server. 
+### When you want to quickly deploy test branches of NodeJS server-side applications onto temporary hosts. Back-end API's, front-end previews - anything with a host server. 
 
 ## How does this work?
 ### Essentially, this project acts as a master controller, managing the different branches of a git repo. When the branch-deploy API is triggered, the controller clones the repo locally, checkouts the specified branch and then starts it up on a unique hostname. 
