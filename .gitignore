@@ -1,3 +1,6 @@
+#sub repos
+branches/
+
 # Logs
 logs
 *.log

@@ -1,6 +1,9 @@
 //setup env vars
 require('dotenv').config();
 
+//git bindings
+const Git = require('nodegit');
+
 //unique gen
 const shortid = require('shortid');
 
@@ -47,6 +50,11 @@ server.use(
 
 let router = express.Router();
 
+router.use((req, res, next) => {
+    req.data = Object.assign(req.params, req.body, req.query);
+    next();
+});
+
 router.get('/', (req, res) => {
     res.send('Branch Deploy Working!');
 });
@@ -55,23 +63,43 @@ router.get('/', (req, res) => {
  * Opens a new branch and starts serving it
  * branch_name
  */
-router.post('/open', (req, res) => {
+router.post('/open', async (req, res) => {
+    console.log(req.data);
     try {
-        if (!req.params.branch_name)
+        if (!req.data.branch_name)
             return res.send({
                 status: 'ERROR Missing required param: branch_name'
             });
 
 
         let id = shortid.generate();
+        
+        db.get('jobs').push({branch_id: id, status: 'pending'}).write();
+
         //clone repo in dir with id
-
-
-        db.get('active_branches')
+        Git.Clone(process.env.REPO_URL, `./branches/${req.data.branch_name}_build_${id}`)
+        .then(function (repo) {
+            db.get('active_branches')
             .push({
-                branch_name: req.params.branch_name,
-                branch_id: id
+                branch_name: req.data.branch_name,
+                branch_id: id,
+                path: `branches/${req.data.branch_name}_build_${id}`
             });
+
+            db.get('jobs').find({branch_id: id}).set('status', 'completed').write();
+        })
+        .catch(function (err) {
+            db.get('jobs').find({branch_id: id}).set('status', 'cancelled').set('message', `ERROR ${err}`).write();
+        });
+
+        return res.send({
+            status: 'OK',
+            branch_id: id,
+            branch_name: req.data.branch_name,
+            job: `/job/${req.data.branch_name}/${id}`,
+            job_status: 'pending'
+        });
+
     } catch (err) {
         return res.send({
             status: `ERROR ${err}`
