@@ -1,17 +1,9 @@
 {
-  "active_branches": [
-    {
-      "branch_name": "Tester123"
-    }
-  ],
+  "active_branches": [],
   "closed_branches": [],
   "jobs": [
     {
-      "branch_id": "re3yP49Mj",
-      "status": "pending"
-    },
-    {
-      "branch_id": "G3Q2RP_Xi",
+      "branch_id": "rxixglsa2",
       "status": "pending"
     }
   ],

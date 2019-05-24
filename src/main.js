@@ -51,7 +51,8 @@ server.use(
 let router = express.Router();
 
 router.use((req, res, next) => {
-    req.data = Object.assign(req.params, req.body, req.query);
+    req.data = Object.assign({}, req.params, req.body, req.query);
+    console.log(req.data);
     next();
 });
 
@@ -72,31 +73,31 @@ router.post('/open', async (req, res) => {
             });
 
 
-        let id = shortid.generate();
-        
-        db.get('jobs').push({branch_id: id, status: 'pending'}).write();
+        let id = shortid.generate().toLowerCase();
+
+        db.get('jobs').push({ branch_id: id, status: 'pending' }).write();
 
         //clone repo in dir with id
         Git.Clone(process.env.REPO_URL, `./branches/${req.data.branch_name}_build_${id}`)
-        .then(function (repo) {
-            db.get('active_branches')
-            .push({
-                branch_name: req.data.branch_name,
-                branch_id: id,
-                path: `branches/${req.data.branch_name}_build_${id}`
-            });
+            .then(function (repo) {
+                db.get('active_branches')
+                    .push({
+                        branch_name: req.data.branch_name,
+                        branch_id: id,
+                        path: `branches/${req.data.branch_name}_build_${id}`
+                    });
 
-            db.get('jobs').find({branch_id: id}).set('status', 'completed').write();
-        })
-        .catch(function (err) {
-            db.get('jobs').find({branch_id: id}).set('status', 'cancelled').set('message', `ERROR ${err}`).write();
-        });
+                db.get('jobs').find({ branch_id: id }).set('status', 'completed').write();
+            })
+            .catch(function (err) {
+                db.get('jobs').find({ branch_id: id }).set('status', 'cancelled').set('message', `ERROR ${err}`).write();
+            });
 
         return res.send({
             status: 'OK',
             branch_id: id,
             branch_name: req.data.branch_name,
-            job: `/job/${req.data.branch_name}/${id}`,
+            job: `/status/${id}`,
             job_status: 'pending'
         });
 
@@ -107,9 +108,12 @@ router.post('/open', async (req, res) => {
     }
 });
 
-router.get('/status/:branch_name', (req, res) => {
-
-})
+router.get('/status/:branch_id', (req, res) => {
+    return res.send({
+        status: 'OK',
+        job: db.get('jobs').find({ branch_id: req.params.branch_id }).value()
+    });
+});
 
 /**
  * Closes a branch and stops serving it
