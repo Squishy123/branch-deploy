@@ -51,8 +51,8 @@ server.use(
 let router = express.Router();
 
 router.use((req, res, next) => {
-    req.data = Object.assign({}, req.params, req.body, req.query);
-    console.log(req.data);
+    req.data = {};
+    req.data = Object.assign(req.data, req.params, req.body, req.query);
     next();
 });
 
@@ -65,7 +65,6 @@ router.get('/', (req, res) => {
  * branch_name
  */
 router.post('/open', async (req, res) => {
-    console.log(req.data);
     try {
         if (!req.data.branch_name)
             return res.send({
@@ -80,12 +79,13 @@ router.post('/open', async (req, res) => {
         //clone repo in dir with id
         Git.Clone(process.env.REPO_URL, `./branches/${req.data.branch_name}_build_${id}`)
             .then(function (repo) {
+                console.log("Completed clone of repo!");
                 db.get('active_branches')
                     .push({
                         branch_name: req.data.branch_name,
                         branch_id: id,
                         path: `branches/${req.data.branch_name}_build_${id}`
-                    });
+                    }).write();
 
                 db.get('jobs').find({ branch_id: id }).set('status', 'completed').write();
             })

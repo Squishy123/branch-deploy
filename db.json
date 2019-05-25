@@ -1,10 +1,45 @@
 {
-  "active_branches": [],
+  "active_branches": [
+    {
+      "branch_name": "master",
+      "branch_id": "tjwmi5kp8",
+      "path": "branches/master_build_tjwmi5kp8"
+    },
+    {
+      "branch_name": "master",
+      "branch_id": "0d3olurdj",
+      "path": "branches/master_build_0d3olurdj"
+    }
+  ],
   "closed_branches": [],
   "jobs": [
     {
       "branch_id": "rxixglsa2",
       "status": "pending"
+    },
+    {
+      "branch_id": "kayu-pvgr",
+      "status": "completed"
+    },
+    {
+      "branch_id": "rwb9dsblv",
+      "status": "pending"
+    },
+    {
+      "branch_id": "tjwmi5kp8",
+      "status": "completed"
+    },
+    {
+      "branch_id": "z3hhtevo4",
+      "status": "pending"
+    },
+    {
+      "branch_id": "odbdt-q51",
+      "status": "pending"
+    },
+    {
+      "branch_id": "0d3olurdj",
+      "status": "completed"
     }
   ],
   "hosts": []

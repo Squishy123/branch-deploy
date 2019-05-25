@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "node src/main.js",
-    "dev": "nodemon src/main.js"
+    "dev": "nodemon src/main.js --ignore branches/ --ignore db.json"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
